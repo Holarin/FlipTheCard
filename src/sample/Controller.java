@@ -106,6 +106,12 @@ public class Controller {
             cardList.get(currentIndex).setRating(rating);
             currentIndex++;
             if (currentIndex == cardList.size()) {
+                try {
+                    DbWordsHandler handler = DbWordsHandler.getInstance();
+                    handler.updateData(fullDeck.get(0).getCategory(), fullDeck);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 showInfo();
                 return;
             }
@@ -115,10 +121,7 @@ public class Controller {
 
     @FXML
     void initialize() throws SQLException {
-        fullDeck.add(new Card("Face", "Лицо", "English", 5));
-        fullDeck.add(new Card("Back", "Назад", "English", 5));
-        fullDeck.add(new Card("Rock", "Камень", "English", 5));
-        fullDeck.add(new Card("Picture", "Картинка", "English", 5));
+
         System.out.println(cardList);
         show.setOnAction(event -> {
             back.setVisible(true);
@@ -142,6 +145,14 @@ public class Controller {
 
         five.setOnAction(event -> {
             setAndShow(5);
+        });
+
+        chooseDeckMenu.setOnAction(event -> {
+            openNewScene("ChooseDeck.fxml");
+            if (cardList.size() != 0) {
+                currentIndex = 0;
+                printCard();
+            }
         });
 
         addNewDeckMenu.setOnAction(event -> {

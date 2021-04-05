@@ -43,6 +43,23 @@ public class DbWordsHandler {
         return false;
     }
 
+    public List<Deck> getDecks() {
+        try (Statement statement = this.conn.createStatement()) {
+            //Сюда загружаем полученные из БД юзеров
+            List<Deck> decks = new ArrayList<>();
+            //выполняeм SQL запрос для получения доступа к данным
+            ResultSet resultSet = statement.executeQuery("SELECT DISTINCT category FROM words");
+            //Пока записи есть - добавляем их в контейнер студентов
+            while (resultSet.next()) {
+               decks.add(new Deck(resultSet.getString("category")));
+            }
+            return decks;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
     public void updateData(String category, List<Card> cards) {
         try (Statement statement = this.conn.createStatement()) {
             statement.execute("DELETE FROM words WHERE category = '" + category + "'");
