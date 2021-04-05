@@ -1,12 +1,12 @@
 package sample;
 
 import javafx.fxml.FXML;
-import javafx.scene.AccessibleAction;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import model.Card;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +46,6 @@ public class Controller {
     }
 
     void setAndShow(int rating) {
-        cardList.get(currentIndex).setRating(rating);
-        currentIndex++;
         if (cardList.size() == currentIndex) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             String info = "Result: \n";
@@ -60,17 +58,21 @@ public class Controller {
 
             alert.showAndWait();
         } else {
+            cardList.get(currentIndex).setRating(rating);
+            currentIndex++;
             printCard();
         }
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
         cardList.add(new Card("Face", "Лицо", "Английский", 5));
         cardList.add(new Card("Back", "Назад", "Английский", 5));
         cardList.add(new Card("Rock", "Камень", "Английский", 5));
         cardList.add(new Card("Picture", "Картинка", "Английский", 5));
-        printCard();
+        cardList.clear();
+
+        System.out.println(cardList);
         show.setOnAction(event -> {
             back.setVisible(true);
         });

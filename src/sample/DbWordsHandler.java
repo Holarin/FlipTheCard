@@ -40,7 +40,7 @@ public class DbWordsHandler {
             //Сюда загружаем полученные из БД юзеров
             List<Card> cards = new ArrayList<>();
             //выполняeм SQL запрос для получения доступа к данным
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM words WHERE category = " + category);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM words WHERE category = '" + category + "'");
             //Пока записи есть - добавляем их в контейнер студентов
             while (resultSet.next()) {
                 cards.add(new Card(resultSet.getString("face"),
