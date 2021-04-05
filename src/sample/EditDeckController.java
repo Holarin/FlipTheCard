@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 import model.Card;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class EditDeckController {
 
@@ -52,17 +54,16 @@ public class EditDeckController {
                 !ratingField.getText().equals("") &&
                 headField != null && backField != null && ratingField != null) {
                     try {
-                        table.getSelectionModel().
-                                getSelectedItem().
-                                setRating(Integer.parseInt(ratingField.getText()) <= 0 ? 1 :
-                                        Math.min(Integer.parseInt(ratingField.getText()), 5));
-                        table.getSelectionModel().getSelectedItem().setFace(headField.getText());
-                        table.getSelectionModel().getSelectedItem().setBack(backField.getText());
+                        Card card = new Card();
+                        card.setRating(Integer.parseInt(ratingField.getText()) <= 0 ? 1 :
+                                Math.min(Integer.parseInt(ratingField.getText()), 5));
+                        card.setFace(headField.getText());
+                        card.setBack(backField.getText());
+                        table.getItems().set(table.getSelectionModel().getSelectedIndex(), card);
+
                     } catch (NumberFormatException e) {
                         showError("Check rating input");
                     }
-
-
                 }
             }
         });
@@ -138,8 +139,9 @@ public class EditDeckController {
 
 
         table.getColumns().addAll(face, back, rating);
-
-        table.getItems().setAll(Controller.fullDeck);
+        for (Card card : Controller.fullDeck) {
+            table.getItems().add(card);
+        }
     }
 
     void showError(String text) {

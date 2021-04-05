@@ -63,4 +63,14 @@ public class Card {
     public int hashCode() {
         return Objects.hash(face, back, category);
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "face='" + face + '\'' +
+                ", back='" + back + '\'' +
+                ", category='" + category + '\'' +
+                ", rating=" + rating +
+                '}';
+    }
 }

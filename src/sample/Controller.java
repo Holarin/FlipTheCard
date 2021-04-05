@@ -144,6 +144,10 @@ public class Controller {
             setAndShow(5);
         });
 
+        addNewDeckMenu.setOnAction(event -> {
+            openNewScene("addDeck.fxml");
+        });
+
         learnWordsMenu.setOnAction(event -> {
             List<Card> oneF = new ArrayList<>();
             for (Card card : fullDeck) {
