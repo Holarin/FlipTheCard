@@ -8,6 +8,10 @@ public class Card {
     private String category;
     private int rating;
 
+    public Card() {
+
+    }
+
     public Card(String face, String back, String category, int rating) {
         this.face = face;
         this.back = back;

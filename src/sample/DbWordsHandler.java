@@ -1,14 +1,7 @@
 package sample;
 
-import java.io.IOException;
-
 import java.sql.*;
 import java.util.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import model.Card;
 import org.sqlite.JDBC;
 
@@ -33,7 +26,35 @@ public class DbWordsHandler {
         //Подключаемся к БД
         this.conn = DriverManager.getConnection(USERDATA);
     }
-    
+
+    public boolean isExist(String category) {
+        try (Statement statement = this.conn.createStatement()) {
+            ResultSet rs =  statement.executeQuery("SELECT EXISTS(SELECT * FROM words WHERE category = '" + category + "')");
+            if (rs.getInt(1) == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        return false;
+    }
+
+    public void updateData(String category, List<Card> cards) {
+        try (Statement statement = this.conn.createStatement()) {
+            statement.execute("DELETE FROM words WHERE category = '" + category + "'");
+            for (Card card : cards) {
+                addCard(card);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+    }
+
     public List<Card> getCards(String category) {
         //Statement используется для выполнения SQL Запроса
         try (Statement statement = this.conn.createStatement()) {
@@ -54,9 +75,8 @@ public class DbWordsHandler {
             return Collections.emptyList();
         }
     }
-    //Добавить юзера
+
     public void addCard(Card card) {
-        //Создаём заранее приготовленный запрос
         try (PreparedStatement statement = this.conn.prepareStatement(
         "INSERT INTO words('face', 'back', 'category', 'rating') VALUES(?, ?, ?, ?)")) {
             //Вставляем данные
@@ -69,22 +89,5 @@ public class DbWordsHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-    //открытие новой сцены
-        public void openNewScene(String window, Node node) {
-        Stage oldStage = (Stage)node.getScene().getWindow();
-        oldStage.close();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(window));
-        try {
-            loader.load();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        Parent root = loader.getRoot();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setResizable(false);
-        stage.showAndWait();
     }
 }
